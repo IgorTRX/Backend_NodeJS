@@ -1,6 +1,8 @@
 const yargs = require('yargs')
-// const pkgJson = require('./package.json')
-// yargs.version(pkgJson.version)
+const pkgJson = require('./package.json')
+const { addNote, getNotes } = require('./notes.controller')
+
+yargs.version(pkgJson.version)
 
 yargs.command({
   command: 'add',
@@ -13,7 +15,7 @@ yargs.command({
     },
   },
   handler({ title }) {
-    console.log('Add command:', title)
+    addNote(title)
   },
 })
 
@@ -21,7 +23,8 @@ yargs.command({
   command: 'list',
   describe: 'Print all notes',
   handler() {
-    console.log('List command')
+    const notes = getNotes()
+    console.log(notes)
   },
 })
 
