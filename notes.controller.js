@@ -11,7 +11,7 @@ async function addNote(title) {
     id: Date.now().toString(),
   }
   notes.push(note)
-  await fs.writeFile(notesPath, JSON.stringify(notes))
+  await saveNotes(notes)
   console.log(chalk.bgGreen('Note was added!'))
 }
 
@@ -23,15 +23,19 @@ async function getNotes() {
 async function removeNote(id) {
   const notes = await getNotes()
   const newNotes = notes.filter((note) => note.id !== id)
-  await fs.writeFile(notesPath, JSON.stringify(newNotes))
-  console.log(chalk.bgGreen('Note was removed!'))
+  await saveNotes(newNotes)
+  console.log(chalk.bgRed('Note was removed!'))
+}
+
+async function saveNotes(notes) {
+  await fs.writeFile(notesPath, JSON.stringify(notes))
 }
 
 async function printNotes() {
   const notes = await getNotes()
   console.log(chalk.bgBlue('Here is the list of notes:'))
   notes.forEach((note) => {
-    console.log(chalk.blue(note.id, note.title))
+    console.log(chalk.green(note.id), chalk.blue(note.title))
   })
 }
 
