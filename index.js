@@ -1,25 +1,23 @@
-// const http = require('http')
 const express = require('express')
 const chalk = require('chalk')
-// const fsPro = require('fs/promises')
-const path = require('path')
-const { addNote } = require('./notes.controller')
+const { addNote, getNotes } = require('./notes.controller')
 
 const port = 3000
-const basePath = path.join(__dirname, 'pages')
 
 const app = express()
+app.set('view engine', 'ejs')
+app.set('views', 'pages')
 app.use(express.urlencoded({ extended: true }))
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(basePath, 'index.html'))
+app.get('/', async (req, res) => {
+  res.render('index', { title: 'Express App', notes: await getNotes() })
 })
 
 app.post('/', async (req, res) => {
   await addNote(req.body.title)
-  res.sendFile(path.join(basePath, 'index.html'))
+  res.render('index', { title: 'Express App', notes: await getNotes() })
 })
 
-app.listen(port, () => {
+app.listen(port, async () => {
   console.log(chalk.green(`Server has been started on port: ${port} ...`))
 })
